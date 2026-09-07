@@ -10,17 +10,25 @@ pipeline {
             }
         }
 
+        stage('Setup') {
+            steps {
+                echo 'Creating Python virtual environment...'
+                sh 'python3 -m venv .venv'
+                sh '.venv/bin/pip install -r requirements.txt'
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building application...'
-                sh 'python3 -m py_compile app.py'
+                sh '.venv/bin/python -m py_compile app.py'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'pytest'
+                sh '.venv/bin/pytest -q'
             }
         }
 
@@ -30,4 +38,4 @@ pipeline {
             }
         }
     }
-} 
+}
